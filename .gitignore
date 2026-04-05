@@ -1,0 +1,10 @@
+.binpath
+.DS_Store
+.vscode
+.idea
+/target
+.deps
+.tools
+frontend/frontend/node_modules
+frontend/frontend/dist
+frontend/frontend/.env.local
