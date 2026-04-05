@@ -1,0 +1,61 @@
+type StoredMessage = struct {
+  sender: actor_id,
+  text: str,
+  block_height: u32,
+};
+
+type StateView = struct {
+  counter: u64,
+  last_caller: opt actor_id,
+  ping_count: u64,
+  message_count: u32,
+  greeting: str,
+};
+
+constructor {
+  /// Constructor: initializes program state.
+  Create : ();
+};
+
+service Demo {
+  /// Internal handler for delayed ping messages. Only callable by the program itself.
+  HandlePing : () -> null;
+  /// Increment the counter by 1. Returns the new value.
+  Increment : () -> u64;
+  /// Send a delayed message to self that triggers handle_ping after `delay` blocks.
+  SchedulePing : (delay: u32) -> null;
+  /// Store a message on-chain. Max 256 chars, non-empty.
+  SendMessage : (text: str) -> str;
+  /// Set the program greeting. Anyone can change it.
+  SetGreeting : (greeting: str) -> str;
+  /// Get the current counter value.
+  query GetCounter : () -> u64;
+  /// Get the current greeting.
+  query GetGreeting : () -> str;
+  /// Get stored messages (last 100).
+  query GetMessages : () -> vec StoredMessage;
+  /// Get a summary of the current state.
+  query GetState : () -> StateView;
+
+  events {
+    Incremented: struct {
+      new_value: u64,
+      caller: actor_id,
+    };
+    MessageSent: struct {
+      sender: actor_id,
+      text: str,
+    };
+    PingScheduled: struct {
+      delay: u32
+    };
+    PingReceived: struct {
+      ping_count: u64
+    };
+    GreetingSet: struct {
+      greeting: str,
+      caller: actor_id,
+    };
+  }
+};
+

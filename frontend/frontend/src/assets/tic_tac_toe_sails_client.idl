@@ -1,0 +1,156 @@
+type GameError = enum {
+  AlreadyInActiveMatch,
+  AlreadyHostingLobby,
+  LobbyNotFound,
+  CannotJoinOwnLobby,
+  MatchNotFound,
+  NotMatchParticipant,
+  InvalidRound,
+  RoundAlreadySettled,
+  CommitmentAlreadySubmitted,
+  RevealAlreadySubmitted,
+  CommitmentMissing,
+  RevealMissing,
+  InvalidRevealHash,
+  MatchAlreadyFinished,
+  CellOutOfBounds,
+};
+
+type CommitInput = struct {
+  hash: [u8, 32],
+};
+
+type MatchView = struct {
+  id: u64,
+  host: actor_id,
+  guest: actor_id,
+  board: [Mark, 9],
+  lifecycle: MatchLifecycle,
+  next_round: u8,
+  round: RoundView,
+  outcome: opt MatchOutcome,
+};
+
+type Mark = enum {
+  Empty,
+  X,
+  O,
+};
+
+type MatchLifecycle = enum {
+  Active,
+  Finished,
+};
+
+type RoundView = struct {
+  round: u8,
+  host_committed: bool,
+  guest_committed: bool,
+  host_revealed: bool,
+  guest_revealed: bool,
+  settled: bool,
+};
+
+type MatchOutcome = struct {
+  result: MatchResultKind,
+  reason: MatchEndReason,
+  winner: opt actor_id,
+};
+
+type MatchResultKind = enum {
+  HostWon,
+  GuestWon,
+  Draw,
+};
+
+type MatchEndReason = enum {
+  LineCompleted,
+  BoardFull,
+  SimultaneousWin,
+  InvalidCell,
+  Forfeit,
+};
+
+type Lobby = struct {
+  id: u64,
+  host: actor_id,
+};
+
+type RevealInput = struct {
+  cell: u8,
+  salt: [u8, 32],
+};
+
+type LeaderboardEntry = struct {
+  player: actor_id,
+  stats: PlayerStats,
+};
+
+type PlayerStats = struct {
+  matches_played: u32,
+  wins: u32,
+  losses: u32,
+  draws: u32,
+};
+
+constructor {
+  Create : ();
+};
+
+service Game {
+  CancelLobby : (lobby_id: u64) -> result (null, GameError);
+  CommitMove : (match_id: u64, round: u8, input: CommitInput) -> result (MatchView, GameError);
+  CreateLobby : () -> result (Lobby, GameError);
+  ForfeitMatch : (match_id: u64) -> result (MatchView, GameError);
+  JoinLobby : (lobby_id: u64) -> result (MatchView, GameError);
+  RevealMove : (match_id: u64, round: u8, input: RevealInput) -> result (MatchView, GameError);
+  SettleRound : (match_id: u64) -> result (MatchView, GameError);
+  query ActiveMatch : (player: actor_id) -> opt MatchView;
+  query Leaderboard : (limit: u16) -> vec LeaderboardEntry;
+  query MatchById : (match_id: u64) -> result (MatchView, GameError);
+  query OpenLobbies : () -> vec Lobby;
+  query PlayerStats : (player: actor_id) -> PlayerStats;
+  query Version : () -> u32;
+
+  events {
+    LobbyCreated: struct {
+      lobby_id: u64,
+      host: actor_id,
+    };
+    LobbyJoined: struct {
+      lobby_id: u64,
+      match_id: u64,
+      host: actor_id,
+      guest: actor_id,
+    };
+    LobbyCancelled: struct {
+      lobby_id: u64,
+      host: actor_id,
+    };
+    MoveCommitted: struct {
+      match_id: u64,
+      round: u8,
+      player: actor_id,
+    };
+    MoveRevealed: struct {
+      match_id: u64,
+      round: u8,
+      player: actor_id,
+    };
+    RoundSettled: struct {
+      match_id: u64,
+      round: u8,
+      board: [Mark, 9],
+      outcome: opt MatchOutcome,
+    };
+    MatchFinished: struct {
+      match_id: u64,
+      outcome: MatchOutcome,
+    };
+    LeaderboardUpdated: struct {
+      player: actor_id,
+      stats: PlayerStats,
+    };
+  }
+};
+
