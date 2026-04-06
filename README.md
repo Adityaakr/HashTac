@@ -1,6 +1,7 @@
 # HashTac
+<img width="1225" height="818" alt="Screenshot 2026-04-06 at 6 50 28 AM" src="https://github.com/user-attachments/assets/7645e9cc-3661-4074-b27b-f74eff5d2161" />
+<img width="1229" height="815" alt="Screenshot 2026-04-06 at 6 50 44 AM" src="https://github.com/user-attachments/assets/1696321f-efd5-45a7-b31e-040bfb7a33d3" />
 
-[![CI](https://github.com/gear-tech/tic-tac-toe-sails/actions/workflows/ci.yml/badge.svg)](https://github.com/gear-tech/tic-tac-toe-sails/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/Rust-1.91+-orange.svg)](https://www.rust-lang.org)
 [![Sails](https://img.shields.io/badge/Sails-0.10.3-blue.svg)](https://github.com/gear-tech/sails)
