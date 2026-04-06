@@ -1,40 +1,62 @@
 # HashTac
 
-## Edge Cases Handled
+## Tech Stack
 
-| Scenario | Outcome |
+| Layer | Technology |
 |---|---|
-| Both players reveal the same empty cell | Conflict - no mark placed for that cell |
-| A player reveals an occupied cell | Invalid reveal - that player forfeits the match |
-| Both players form a winning line in the same round | Draw |
-| Board fills without a winner | Draw |
-| One player forfeits | Opponent wins |
+| Smart Contract | Rust, Sails 0.10.3, SHA-256 |
+| Client | Generated Rust crate + IDL |
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, Framer Motion |
+| Wallet / Chain | @polkadot/api, @gear-js/api, sails-js |
+| Testing | sails-rs gtest, tokio |
+| CI | GitHub Actions (fmt, clippy, build, test) |
 
-## Smart Contract API
+## Getting Started
 
-### Commands
+### Prerequisites
 
-| Method | Description |
-|---|---|
-| `CreateLobby()` | Create an open lobby |
-| `JoinLobby(lobby_id)` | Join a lobby and start a match |
-| `CancelLobby(lobby_id)` | Cancel an open lobby (host only) |
-| `CommitMove(match_id, round, hash)` | Submit a move commitment |
-| `RevealMove(match_id, round, cell, salt)` | Reveal a committed move |
-| `SettleRound(match_id)` | Settle the current round |
-| `ForfeitMatch(match_id)` | Forfeit an active match |
+- **Rust 1.91+** (managed via `rust-toolchain.toml`)
+- **Binaryen** (`wasm-opt` for optimized WASM builds)
+- **Node.js 18+** and npm
+- A local Vara node or access to a Vara network endpoint
 
-### Queries
+### Contract Tests
 
-| Method | Returns |
-|---|---|
-| `OpenLobbies()` | List of open lobbies |
-| `MatchById(match_id)` | Full match state |
-| `ActiveMatch(player)` | Active match for a player, if any |
-| `Leaderboard(limit)` | Top players sorted by wins |
-| `PlayerStats(player)` | Stats for a specific player |
-| `Version()` | Contract version |
+```bash
+cargo test --test gtest -- --nocapture
+```
 
-### Events
+### Build the Contract
 
-`LobbyCreated`, `LobbyJoined`, `LobbyCancelled`, `MoveCommitted`, `MoveRevealed`, `RoundSettled`, `MatchFinished`, `LeaderboardUpdated`
+```bash
+cargo build --release
+```
+
+### Frontend Setup
+
+```bash
+cd frontend/frontend
+npm install
+```
+
+Create `.env.local`:
+
+```env
+VITE_PROGRAM_ID=0x...
+VITE_NODE_ENDPOINT=ws://127.0.0.1:9944
+```
+
+### Development Server
+
+```bash
+cd frontend/frontend
+npm run dev
+```
+
+### Production Build
+
+```bash
+cd frontend/frontend
+npm run build
+npm run preview
+```
