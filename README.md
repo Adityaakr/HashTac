@@ -1,12 +1,13 @@
 # HashTac
 <img width="1225" height="818" alt="Screenshot 2026-04-06 at 6 50 28 AM" src="https://github.com/user-attachments/assets/7645e9cc-3661-4074-b27b-f74eff5d2161" />
+
+**HashTac** is an on-chain tic-tac-toe game built for the [Vara Network](https://vara.network) using the [Sails](https://github.com/gear-tech/sails) framework. It implements a commit-and-reveal game flow so both players lock in hashed moves before revealing them, eliminating front-running and copycat play. The smart contract settles collisions, validates reveals, detects wins and draws, and maintains a persistent on-chain leaderboard.
+
 <img width="1229" height="815" alt="Screenshot 2026-04-06 at 6 50 44 AM" src="https://github.com/user-attachments/assets/1696321f-efd5-45a7-b31e-040bfb7a33d3" />
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/Rust-1.91+-orange.svg)](https://www.rust-lang.org)
 [![Sails](https://img.shields.io/badge/Sails-0.10.3-blue.svg)](https://github.com/gear-tech/sails)
-
-**HashTac** is an on-chain tic-tac-toe game built for the [Vara Network](https://vara.network) using the [Sails](https://github.com/gear-tech/sails) framework. It implements a commit-and-reveal game flow so both players lock in hashed moves before revealing them, eliminating front-running and copycat play. The smart contract settles collisions, validates reveals, detects wins and draws, and maintains a persistent on-chain leaderboard.
 
 ## Features
 
